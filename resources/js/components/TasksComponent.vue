@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Tasks List <span class="btn btn-success btn-sm float-right">+</span> </div>
+                    <div class="card-header">Tasks List <span class="float-right"> <a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addTask" href="#addTask"> + </a> </span> </div>
 
                     <div class="card-body">
                         <ul class="list-group">
@@ -17,11 +17,16 @@
                 </div>
             </div>
         </div>
+        <div id="modal">
+            <addTask @recordTask='refreshTask'></addTask>
+        </div>
+
     </div>
 </template>
 
 <script>
 Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('addTask', require('./AddTaskComponent.vue').default);
 
     export default {
         data(){
@@ -39,6 +44,9 @@ Vue.component('pagination', require('laravel-vue-pagination'));
                 axios.get('http://127.0.0.1:8000/tasks?page=' + page)
                     .then(response => this.tasks = response.data)
                     .catch((error) => console.log(error));
+            },
+            refreshTask(record){
+                this.tasks = record.data
             }
         },
         created() {

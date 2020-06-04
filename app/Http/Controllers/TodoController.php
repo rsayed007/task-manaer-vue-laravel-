@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Todo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TodoController extends Controller
@@ -15,7 +16,7 @@ class TodoController extends Controller
     public function index()
     {
         // $tasks = Todo::all();
-        $tasks = Todo::paginate(2);
+        $tasks = Todo::orderBy('id','desc')->paginate(2);
         return request()->json(200, $tasks);
         // return $tasks;
     }
@@ -38,7 +39,18 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'task' => 'required',
+        ]);
+
+        $task = new Todo();
+        $task->task = $request->task;
+        $task->save();
+        if ($task) {
+            $tasks = Todo::orderBy('id','desc')->paginate(2);
+            return request()->json(200, $tasks);
+        }
+        
     }
 
     /**
